@@ -37,6 +37,15 @@ export class HudData {
   /** something to tell the player once, like a room they were in having closed */
   notice: Signal<string | null>;
 
+  /** competitive match entry fee selection */
+  competitiveFee: Signal<number>;
+
+  /** competitive match error */
+  matchError: Signal<string | null>;
+
+  /** competitive room created (entry fee > 0) */
+  isCompetitive: Signal<boolean>;
+
   constructor() {
     this.mode = signal<LobbyMode>("idle");
     this.room = signal<string | null>(null);
@@ -46,5 +55,8 @@ export class HudData {
     this.joinError = signal<string | null>(null);
     this.rejoinRoom = signal<string | null>(null);
     this.notice = signal<string | null>(null);
+    this.competitiveFee = signal<number>(0);
+    this.matchError = signal<string | null>(null);
+    this.isCompetitive = signal<boolean>(false);
   }
 }

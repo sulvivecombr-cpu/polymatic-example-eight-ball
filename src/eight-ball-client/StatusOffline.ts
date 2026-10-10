@@ -21,11 +21,11 @@ export class StatusOffline extends Middleware<ClientBilliardContext> {
     const context = this.context;
     if (this.memo.update(context.shotInProgress, context.gameOver)) {
       const status = [];
-      status.push("Practice");
+      status.push("Praticar");
       if (context.shotInProgress) {
-        status.push("Shot in progress");
+        status.push("Tacada em andamento");
       } else if (context.gameOver) {
-        status.push("Game over");
+        status.push("Fim de jogo");
       }
       context.hud.statusText.value = status.join(" | ");
     }

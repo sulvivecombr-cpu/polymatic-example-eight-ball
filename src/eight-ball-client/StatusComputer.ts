@@ -32,16 +32,16 @@ export class StatusComputer extends Middleware<ClientBilliardContext> {
     ) {
       const status = [];
       if (context.gameOver) {
-        status.push(context.winner === player?.id ? "You win" : "The computer wins");
-        status.push("Play Computer for a new game");
+        status.push(context.winner === player?.id ? "Você venceu" : "O computador venceu");
+        status.push("Clique em Computador para nova partida");
       } else {
         if (player?.color) {
-          status.push("You play " + player.color);
+          status.push("Você joga " + (player.color === "stripe" ? "listradas" : "lisas"));
         }
         if (context.shotInProgress) {
-          status.push("Shot in progress");
+          status.push("Tacada em andamento");
         } else if (context.turn?.current && player?.turn) {
-          status.push(context.turn.current === player.turn ? "Your turn" : "Computer's turn");
+          status.push(context.turn.current === player.turn ? "Sua vez" : "Vez do computador");
         }
       }
       context.hud.statusText.value = status.join(" | ");

@@ -12,17 +12,17 @@ export function RejoinDialog() {
         class={styles.dialog}
         role="dialog"
         aria-modal="true"
-        aria-label="Rejoin room"
+        aria-label="Voltar à sala"
         onClick={(ev) => ev.stopPropagation()}
       >
-        <span class={styles.dialogTitle}>Rejoin room {runtime.hud.rejoinRoom.value}?</span>
-        <span>Your game there is still running.</span>
+        <span class={styles.dialogTitle}>Voltar à sala {runtime.hud.rejoinRoom.value}?</span>
+        <span>Sua partida ainda está em andamento.</span>
         <div class={styles.dialogActions}>
           <button type="button" class={styles.button} onClick={() => declineRejoin(runtime)}>
-            Stay offline
+            Ficar offline
           </button>
           <button type="button" class={styles.button} onClick={() => rejoinRoom(runtime)} autoFocus>
-            Rejoin
+            Voltar
           </button>
         </div>
       </div>
@@ -40,7 +40,7 @@ export function NoticeDialog() {
         class={styles.dialog}
         role="alertdialog"
         aria-modal="true"
-        aria-label="Notice"
+        aria-label="Aviso"
         onClick={(ev) => ev.stopPropagation()}
       >
         <span>{runtime.hud.notice.value}</span>

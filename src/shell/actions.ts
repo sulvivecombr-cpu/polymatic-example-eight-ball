@@ -15,8 +15,8 @@ export function playOffline({ emit }: GameRuntime) {
 }
 
 /** @action */
-export function createRoom({ emit }: GameRuntime) {
-  emit("create-room");
+export function createRoom({ emit }: GameRuntime, entryFee = 0) {
+  emit("create-room", entryFee);
 }
 
 /** @action */

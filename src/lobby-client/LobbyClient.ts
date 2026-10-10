@@ -113,7 +113,8 @@ export class LobbyClient extends Middleware<LobbyClientContext> {
   /** The lobby socket, opened on first use. */
   lobby(): Socket {
     if (!this.io) {
-      this.io = io();
+      const token = localStorage.getItem("pa_token");
+      this.io = io({ auth: { token } });
       this.io.on("connect_error", this.handleLobbyError);
     }
     return this.io;
@@ -231,12 +232,20 @@ export class LobbyClient extends Middleware<LobbyClientContext> {
     this.startIfIdle();
   };
 
-  handleCreateRoom = () => {
+  handleCreateRoom = (entryFee = 0) => {
     this.creating = true;
     this.context.hud.roomError.value = null;
-    this.lobby().emit("create-room", (room: { id: string }) => {
+    this.context.hud.matchError.value = null;
+    const token = localStorage.getItem("pa_token");
+    this.lobby().emit("create-room", { entryFee, token }, (room: { id: string; entryFee?: number; competitive?: boolean; error?: string }) => {
       if (!this.creating) return;
       this.creating = false;
+      if (room.error) {
+        this.context.hud.matchError.value = room.error;
+        this.context.hud.roomError.value = room.error;
+        return;
+      }
+      this.context.hud.isCompetitive.value = !!room.competitive;
       this.openRoom(room.id);
     });
   };

@@ -5,10 +5,11 @@ body {
   margin: 0;
   padding: 0;
   user-select: none;
-  background: #323130;
+  background: #1a1916;
   font-family: monospace;
   font-size: 0.95em;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 /* the preact hud, over the table: transparent to pointers so a drag still aims

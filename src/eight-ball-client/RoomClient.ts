@@ -23,10 +23,11 @@ export class RoomClient extends Middleware<ClientBilliardContext> {
 
     // the login is picked by the lobby, see RoomStore
     const auth = this.context.auth;
+    const token = localStorage.getItem("pa_token");
 
     const room = this.context.room;
     this.io = io("/room/" + room, {
-      auth: auth,
+      auth: { ...auth, token },
     });
 
     this.io.on("connect_error", (err) => {

@@ -4,6 +4,7 @@ import { Middleware, Runtime } from "polymatic";
 import { randomRoomId } from "../lobby/RoomId";
 import { MainServer } from "../eight-ball-server/MainServer";
 import { ServerBilliardContext } from "../eight-ball-server/ServerContext";
+import { createCompetitiveMatch, cancelMatch, getMatchByRoom } from "../game/MatchManager";
 
 export const lobby = (io: Server) => {
   Runtime.activate(new LobbyServer(), { io });
@@ -11,6 +12,8 @@ export const lobby = (io: Server) => {
 
 export class Room {
   id = randomRoomId();
+  entryFee = 0;
+  competitive = false;
 }
 
 interface LobbyContext {
@@ -26,24 +29,43 @@ class LobbyServer extends Middleware<LobbyContext> {
   handleActivate() {
     const io = this.context.io;
 
-    // set up connection and disconnect listeners
     io.on("connection", (socket) => {
-      // socket.on("disconnect", (reason) => this.handleSocketDisconnect({ socket, reason }));
-      socket.on("create-room", (ack) => this.handleCreateRoomRequest(ack));
+      socket.on("create-room", (data, ack) => this.handleCreateRoomRequest(socket, data, ack));
       socket.on("check-room", (id, ack) => this.handleCheckRoomRequest(id, ack));
-      // this.handleSocketConnect({ socket });
     });
   }
 
-  // handleSocketConnect = ({ socket }: { socket: Socket }) => {};
-
-  // handleSocketDisconnect = ({ socket, reason }: { socket: Socket; reason: DisconnectReason }) => {};
-
-  handleCreateRoomRequest = (ack: (room: { id: string }) => void) => {
+  handleCreateRoomRequest = async (socket: Socket, data: any, ack: any) => {
+    // Support both old signature (ack only) and new (data, ack)
+    if (typeof data === "function") {
+      ack = data;
+      data = {};
+    }
     if (typeof ack !== "function") return;
+
     const room = new Room();
+    const entryFee = typeof data?.entryFee === "number" ? Math.max(0, Math.floor(data.entryFee)) : 0;
+
+    // Competitive rooms require authentication
+    if (entryFee > 0) {
+      const user = (socket as any).user;
+      if (!user) {
+        ack({ error: "Autenticação necessária para partidas competitivas" });
+        return;
+      }
+      room.entryFee = entryFee;
+      room.competitive = true;
+
+      try {
+        await createCompetitiveMatch(room.id, entryFee, user.userId);
+      } catch (err: any) {
+        ack({ error: err.message || "Erro ao criar partida competitiva" });
+        return;
+      }
+    }
+
     this.activateRoom(room);
-    ack({ id: room.id });
+    ack({ id: room.id, entryFee: room.entryFee, competitive: room.competitive });
   };
 
   /** Whether a room is still running: its namespace is removed when it closes, see RoomServer. */
@@ -57,7 +79,6 @@ class LobbyServer extends Middleware<LobbyContext> {
     const namespace = this.context.io.of("/room/" + room.id);
 
     // create and activate a server-side game instance
-    // create context
     const context = new ServerBilliardContext();
     context.room = room;
     context.io = namespace;

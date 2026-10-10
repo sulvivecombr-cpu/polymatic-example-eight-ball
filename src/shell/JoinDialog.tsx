@@ -25,26 +25,26 @@ export function JoinDialog() {
         class={styles.dialog}
         role="dialog"
         aria-modal="true"
-        aria-label="Join room"
+        aria-label="Entrar na sala"
         onClick={(ev) => ev.stopPropagation()}
         onSubmit={submit}
       >
-        <span class={styles.dialogTitle}>Join room</span>
+        <span class={styles.dialogTitle}>Entrar na sala</span>
         <input
           class={styles.input}
           value={id}
           placeholder="xxx-xxx-xxx"
-          aria-label="Room id"
+          aria-label="ID da sala"
           autoFocus
           onInput={(ev) => setId((ev.target as HTMLInputElement).value)}
         />
         {error && <span class={styles.dialogError}>{error}</span>}
         <div class={styles.dialogActions}>
           <button type="button" class={styles.button} onClick={() => closeJoin(runtime)}>
-            Cancel
+            Cancelar
           </button>
           <button type="submit" class={styles.button}>
-            Join
+            Entrar
           </button>
         </div>
       </form>

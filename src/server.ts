@@ -4,6 +4,7 @@ import os from "os";
 import path from "path";
 import express from "express";
 import http from "http";
+import cookieParser from "cookie-parser";
 import ViteExpress from "vite-express";
 import { Server } from "socket.io";
 import { instrument } from "@socket.io/admin-ui";
@@ -20,8 +21,27 @@ const PORT = Number(process.env.PORT) || 4801;
 // create express app
 const expressApp = express();
 
+// middleware
+expressApp.use(express.json());
+expressApp.use(cookieParser());
+
 // create http server
 const httpServer = http.createServer(expressApp);
+
+// ============ API ROUTES ============
+import { expressAuth } from "./auth/middleware";
+import authRoutes from "./api/auth";
+import profileRoutes from "./api/profile";
+import walletRoutes from "./api/wallet";
+import leaderboardRoutes from "./api/leaderboard";
+import adminRoutes from "./api/admin";
+
+expressApp.use(expressAuth);
+expressApp.use("/api/auth", authRoutes);
+expressApp.use("/api/profile", profileRoutes);
+expressApp.use("/api/wallet", walletRoutes);
+expressApp.use("/api/leaderboard", leaderboardRoutes);
+expressApp.use("/api/admin", adminRoutes);
 
 // serves socket.io admin-ui
 expressApp.use(
@@ -41,6 +61,10 @@ httpServer.listen(PORT, () => {
 
 // create socket.io server
 const io = new Server(httpServer);
+
+// socket.io auth middleware
+import { socketAuth } from "./auth/middleware";
+io.use(socketAuth);
 
 // match-making lobby
 lobby(io);

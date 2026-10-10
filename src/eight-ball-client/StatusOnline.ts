@@ -34,23 +34,23 @@ export class StatusOnline extends Middleware<ClientBilliardContext> {
       if (context.gameOver) {
         if (context.winner) {
           if (context.winner === context.player.id) {
-            status.push("You win");
+            status.push("Você venceu");
           } else {
-            status.push("You lose");
+            status.push("Você perdeu");
           }
         } else {
-          status.push("Game over");
+          status.push("Fim de jogo");
         }
       } else {
         if (player?.color) {
-          status.push("Play " + player?.color);
+          status.push("Jogando " + (player.color === "stripe" ? "listradas" : "lisas"));
         }
         if (!context.players || context.players.length < 2) {
-          status.push("Waiting for opponent");
+          status.push("Aguardando oponente");
         } else if (context.shotInProgress) {
-          status.push("Shot in progress");
+          status.push("Tacada em andamento");
         } else if (context.turn?.current && player?.turn) {
-          status.push(context.turn?.current === player?.turn ? "Your turn" : "Opponent's turn");
+          status.push(context.turn?.current === player?.turn ? "Sua vez" : "Vez do oponente");
         }
       }
       context.hud.statusText.value = status.join(" | ");
