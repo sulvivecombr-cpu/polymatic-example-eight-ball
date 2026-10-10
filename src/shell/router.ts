@@ -2,6 +2,11 @@ import { signal } from "@preact/signals";
 
 export type Route =
   | { name: "game" }
+  | { name: "computer" }
+  | { name: "practice" }
+  | { name: "create-room" }
+  | { name: "join-room" }
+  | { name: "competitive" }
   | { name: "auth" }
   | { name: "profile"; username?: string }
   | { name: "wallet" }
@@ -16,6 +21,11 @@ function parseHash(): Route {
   const parts = hash.split("/").filter(Boolean);
 
   if (parts.length === 0) return { name: "game" };
+  if (parts[0] === "computador") return { name: "computer" };
+  if (parts[0] === "praticar") return { name: "practice" };
+  if (parts[0] === "criar-sala") return { name: "create-room" };
+  if (parts[0] === "entrar-sala") return { name: "join-room" };
+  if (parts[0] === "competitivo") return { name: "competitive" };
   if (parts[0] === "login") return { name: "auth" };
   if (parts[0] === "profile") return { name: "profile", username: parts[1] };
   if (parts[0] === "wallet") return { name: "wallet" };

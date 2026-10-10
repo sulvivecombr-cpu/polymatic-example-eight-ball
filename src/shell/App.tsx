@@ -5,6 +5,11 @@ import { currentUser, authLoading } from "./auth-store";
 import { Hud } from "./Hud";
 import { TopBar, DesktopNav, BottomNav } from "./Navigation";
 import { AuthPage } from "../pages/AuthPage";
+import { ComputerPage } from "../pages/ComputerPage";
+import { PracticePage } from "../pages/PracticePage";
+import { CreateRoomPage } from "../pages/CreateRoomPage";
+import { JoinRoomPage } from "../pages/JoinRoomPage";
+import { CompetitivePage } from "../pages/CompetitivePage";
 import { ProfilePage } from "../pages/ProfilePage";
 import { WalletPage } from "../pages/WalletPage";
 import { LeaderboardPage } from "../pages/LeaderboardPage";
@@ -48,6 +53,16 @@ export function App() {
       <div class={styles.platformContent}>
         {loading ? (
           <div class={styles.loading}>Carregando...</div>
+        ) : r.name === "computer" ? (
+          <ComputerPage />
+        ) : r.name === "practice" ? (
+          <PracticePage />
+        ) : r.name === "create-room" ? (
+          <CreateRoomPage />
+        ) : r.name === "join-room" ? (
+          <JoinRoomPage />
+        ) : r.name === "competitive" ? (
+          <CompetitivePage />
         ) : r.name === "profile" ? (
           <ProfilePage username={r.username} />
         ) : r.name === "wallet" ? (

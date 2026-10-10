@@ -1,10 +1,15 @@
-import { TbCoin, TbHome, TbTrophy, TbUser, TbHistory } from "react-icons/tb";
+import { TbCoin, TbHome, TbTrophy, TbUser, TbHistory, TbRobot, TbPlayerPlay, TbPlus, TbDoorEnter, TbSwords } from "react-icons/tb";
 import { currentUser, logout } from "./auth-store";
 import { route, navigate } from "./router";
 import styles from "./Platform.module.css";
 
 const NAV_ITEMS = [
   { name: "game", label: "Jogar", icon: TbHome, hash: "/" },
+  { name: "computer", label: "Computador", icon: TbRobot, hash: "/computador" },
+  { name: "practice", label: "Praticar", icon: TbPlayerPlay, hash: "/praticar" },
+  { name: "create-room", label: "Criar Sala", icon: TbPlus, hash: "/criar-sala" },
+  { name: "join-room", label: "Entrar Sala", icon: TbDoorEnter, hash: "/entrar-sala" },
+  { name: "competitive", label: "Competitivo", icon: TbSwords, hash: "/competitivo" },
   { name: "leaderboard", label: "Ranking", icon: TbTrophy, hash: "/leaderboard" },
   { name: "wallet", label: "Carteira", icon: TbCoin, hash: "/wallet", auth: true },
   { name: "matches", label: "Partidas", icon: TbHistory, hash: "/matches", auth: true },
